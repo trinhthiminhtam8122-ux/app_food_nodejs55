@@ -1,0 +1,196 @@
+CREATE TABLE `user`(
+	user_id INT PRIMARY KEY AUTO_INCREMENT,
+	full_name VARCHAR(255),
+	email VARCHAR(255),
+	`password` VARCHAR(255)
+);
+
+INSERT INTO `user`(full_name, email, `password`) VALUES 
+('Nguyen Minh Anh', 'minhanh.nguyen@gmail.com', '123456'),
+('Tran Gia Bao', 'giabao.tran@gmail.com', 'bao123'),
+('Le Hoang Nam', 'hoangnam.le@gmail.com', 'nam456'),
+('Pham Quoc Huy', 'quochuy.pham@gmail.com', 'huy789'),
+('Vo Thu Trang', 'thutrang.vo@gmail.com', 'trang123'),
+('Dang Minh Quan', 'minhquan.dang@gmail.com', 'quan456'),
+('Bui Khanh Linh', 'khanhlinh.bui@gmail.com', 'linh789'),
+('Do Tuan Kiet', 'tuankiet.do@gmail.com', 'kiet123'),
+('Huynh Bao Chau', 'baochau.huynh@gmail.com', 'chau456'),
+('Phan Gia Han', 'giahan.phan@gmail.com', 'han789');
+
+CREATE TABLE restaurant(
+	res_id INT PRIMARY KEY AUTO_INCREMENT,
+	res_name VARCHAR(255),
+	image VARCHAR(255),
+	`desc` VARCHAR(255) 
+);
+
+INSERT INTO restaurant(res_name, image, `desc`) VALUES 
+('Pizza 4P''s', 'pizza4ps.jpg', 'Famous restaurant serving Japanese-style Italian pizza'),
+('Pho Hoa Pasteur', 'phohoa.jpg', 'Traditional Vietnamese pho restaurant'),
+('Highlands Coffee', 'highlands.jpg', 'Popular Vietnamese coffee chain'),
+('Gogi House', 'gogi.jpg', 'Korean BBQ restaurant with grilled meat buffet'),
+('Kichi Kichi', 'kichi.jpg', 'Japanese hotpot conveyor belt restaurant'),
+('The Coffee House', 'tch.jpg', 'Modern cafe with coffee and pastries'),
+('Sushi Tei', 'sushitei.jpg', 'Japanese sushi and sashimi restaurant'),
+('Bun Cha Huong Lien', 'buncha.jpg', 'Hanoi-style bun cha restaurant'),
+('King BBQ', 'kingbbq.jpg', 'Korean barbecue buffet restaurant'),
+('Lotteria', 'lotteria.jpg', 'Fast food restaurant serving burgers and fries');
+
+CREATE TABLE rate_res(
+	user_id INT,
+	res_id INT,
+	amount INT,
+	date_rate DATETIME,
+	
+	FOREIGN KEY (user_id) REFERENCES `user`(user_id),
+	FOREIGN KEY (res_id) REFERENCES restaurant(res_id),
+	PRIMARY KEY (user_id, res_id)
+);
+
+INSERT INTO rate_res(user_id, res_id, amount, date_rate) VALUES 
+(1, 1, 5, '2026-05-10 18:30:00'),
+(1, 3, 4, '2026-05-11 09:15:00'),
+(2, 2, 5, '2026-05-11 12:45:00'),
+(2, 5, 3, '2026-05-12 14:20:00'),
+(3, 1, 4, '2026-05-12 19:00:00'),
+(3, 4, 5, '2026-05-13 20:10:00'),
+(4, 6, 4, '2026-05-13 08:30:00'),
+(5, 7, 5, '2026-05-13 13:50:00'),
+(6, 8, 3, '2026-05-14 11:40:00'),
+(7, 9, 4, '2026-05-14 17:25:00');
+
+CREATE TABLE like_res(
+	user_id INT,
+	res_id INT,
+	date_like DATETIME,
+	
+	FOREIGN KEY (user_id) REFERENCES `user`(user_id),
+	FOREIGN KEY (res_id) REFERENCES restaurant(res_id),
+	PRIMARY KEY (user_id, res_id)
+);
+
+INSERT INTO like_res(user_id, res_id, date_like) VALUES 
+(1, 2, '2026-05-10 10:00:00'),
+(3, 1, '2026-05-10 11:20:00'),
+(3, 2, '2026-05-11 09:45:00'),
+(5, 7, '2026-05-12 16:40:00'),
+(7, 3, '2026-05-11 14:15:00'),
+(8, 3, '2026-05-13 21:00:00'),
+(9, 2, '2026-05-14 12:50:00'),
+(9, 4, '2026-05-12 18:30:00'),
+(9, 8, '2026-05-13 20:10:00'),
+(9, 9, '2026-05-14 08:25:00');
+
+CREATE TABLE food_type(
+	type_id INT PRIMARY KEY AUTO_INCREMENT,
+	type_name VARCHAR(255)
+);
+
+INSERT INTO food_type(type_name) VALUES 
+('Vietnamese Food'),
+('Japanese Food'),
+('Korean Food'),
+('Chinese Food'),
+('Thai Food'),
+('Fast Food'),
+('BBQ'),
+('Hotpot'),
+('Seafood'),
+('Vegetarian Food');
+
+
+CREATE TABLE food(
+	food_id INT PRIMARY KEY AUTO_INCREMENT,
+	food_name VARCHAR(255),
+	image VARCHAR(255),
+	price FLOAT,
+	`desc`VARCHAR(255),
+	type_id INT,
+	FOREIGN KEY (type_id) REFERENCES food_type(type_id)
+);
+
+INSERT INTO food(food_name, image, price, `desc`, type_id) VALUES 
+('Pho Bo', 'phobo.jpg', 45000, 'Traditional Vietnamese beef noodle soup', 1),
+('Banh Mi', 'banhmi.jpg', 25000, 'Vietnamese baguette sandwich', 1),
+('Sushi Salmon', 'sushi_salmon.jpg', 120000, 'Fresh salmon sushi set', 2),
+('Ramen Tonkotsu', 'ramen.jpg', 95000, 'Japanese pork broth ramen', 2),
+('Kimchi Fried Rice', 'kimchi_rice.jpg', 70000, 'Korean kimchi fried rice', 3),
+('Jajangmyeon', 'jajangmyeon.jpg', 80000, 'Korean black bean noodles', 3),
+('Dimsum Mix', 'dimsum.jpg', 90000, 'Chinese mixed dimsum platter', 4),
+('Pad Thai', 'padthai.jpg', 85000, 'Thai stir-fried rice noodles', 5),
+('Cheese Burger', 'burger.jpg', 65000, 'Fast food beef cheeseburger', 6),
+('Beef BBQ Set', 'bbq.jpg', 250000, 'Korean grilled beef BBQ combo', 7);
+
+CREATE TABLE `order` (
+	user_id INT,
+	food_id INT,
+	amount INT,
+	`code` VARCHAR(255),
+	arr_sub_id VARCHAR(255),
+	FOREIGN KEY (user_id) REFERENCES `user`(user_id),
+	FOREIGN KEY (food_id) REFERENCES food(food_id),
+	PRIMARY KEY (user_id, food_id)
+);
+
+INSERT INTO `order`(user_id, food_id, amount, `code`, arr_sub_id) VALUES 
+(1, 1, 2, 'ORD001', '1,2'),
+(1, 6, 1, 'ORD006', '1'),
+(1, 7, 1, 'ORD002', '2'),
+(2, 2, 3, 'ORD003', '1,3'),
+(2, 7, 1, 'ORD004', '4'),
+(3, 4, 2, 'ORD005', '2,5'),
+(4, 2, 1, 'ORD009', '5'),
+(5, 10, 4, 'ORD007', '3,4'),
+(8, 10, 2, 'ORD010', '1,2,3'),
+(9, 8, 2, 'ORD008', '2');
+
+CREATE TABLE sub_food (
+  sub_id INT PRIMARY KEY AUTO_INCREMENT,
+  sub_name VARCHAR(255),
+  sub_price FLOAT,
+  food_id INT,
+  FOREIGN KEY (food_id) REFERENCES food(food_id)
+);
+
+INSERT INTO sub_food(sub_name, sub_price, food_id) VALUES 
+('Extra Beef', 20000, 1),
+('Extra Noodles', 10000, 1),
+('Cheese', 15000, 2),
+('Egg', 10000, 4),
+('Kimchi', 12000, 5),
+('Extra Salmon', 30000, 3),
+('Mushroom', 18000, 8),
+('French Fries', 25000, 9),
+('Soft Drink', 15000, 9),
+('BBQ Sauce', 10000, 10);
+
+
+
+# Câu 1: Tìm 5 người đã like nhà hàng nhiều nhất.
+SELECT COUNT(l.user_id) AS 'số lượt like của khách', u.user_id, u.full_name, u.email
+FROM `user` u JOIN like_res l on u.user_id = l.user_id
+GROUP BY u.user_id, u.full_name, u.email
+HAVING COUNT(l.user_id) > 0
+ORDER BY COUNT(l.user_id) DESC
+LIMIT 1 
+
+
+# câu 2: Tìm 2 nhà hàng có lượt like nhiều nhất
+SELECT COUNT(r.res_id) as 'số lượt like của nhà hàng', r.res_id, r.res_name, r.`desc`
+FROM restaurant r JOIN like_res l on r.res_id = l.res_id
+GROUP BY r.res_id, r.res_name, r.`desc`
+HAVING COUNT(r.res_id) > 0 
+ORDER BY COUNT(r.res_id) DESC
+LIMIT 5 
+
+# Câu 3: Tìm người đã đặt hàng nhiều nhất.
+SELECT COUNT(u.user_id) as 'số lượng order của người dùng', u.user_id, u.full_name, u.email
+FROM `user` u join `order` o on u.user_id = o.user_id
+GROUP BY u.user_id, u.full_name, u.email
+HAVING COUNT(u.user_id) > 0 
+LIMIT 1 
+
+# câu 4: Tìm người dùng không hoạt động trong hệ thống (không đặt hàng, không like, không đánh giá nhà hàng).
+SELECT u.user_id, u.full_name, u.email, o.food_id, o.code, o.arr_sub_id
+FROM `user` u LEFT JOIN `order` o on u.user_id = o.user_id
+WHERE o.user_id IS NULL
